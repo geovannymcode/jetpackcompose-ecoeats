@@ -18,7 +18,12 @@ fun SetupNavigation() {
         startDestination = "welcome_screen"//Screen.OnBoardingScreen.route
     ) {
         composable(route = "welcome_screen") {
-            WelcomeScreen(navController = navController )
+            WelcomeScreen(
+                onClick = {
+                    navController.popBackStack()
+                    navController.navigate("onboarding_screen")
+                }
+            )
         }
         composable(route = "onboarding_screen") {
             OnBoardingScreen()

@@ -52,9 +52,12 @@ fun ButtonBasic(
     text: String,
     containerColor: Color = Primary,
     contentColor: Color = Color.White,
+    onClick:() -> Unit
 ) {
     Button(
-        onClick = {},
+        onClick = {
+            onClick()
+        },
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,

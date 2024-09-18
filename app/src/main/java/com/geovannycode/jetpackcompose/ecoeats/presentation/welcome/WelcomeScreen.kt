@@ -35,7 +35,7 @@ import com.geovannycode.jetpackcompose.ecoeats.ui.theme.Secundary
 @Composable
 fun WelcomeScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
+    onClick: () -> Unit
 ) {
 
     Column(
@@ -53,26 +53,31 @@ fun WelcomeScreen(
             .weight(1f),
             contentAlignment = Alignment.BottomCenter
             ) {
-            WelcomeContent(navController = navController)
+            WelcomeContent(
+                onClick = {
+                    onClick()
+                }
+            )
 
         }
     }
 }
 
 @Composable
-fun WelcomeContent(navController: NavController){
+fun WelcomeContent(onClick: () -> Unit) {
 
     ImageBasic(
         image = R.drawable.background_fruits,
         description = "Background Fruits",
-        modifier = Modifier.fillMaxSize().clickable {
-            navController.navigate(route = "onboarding_screen")
-        }
+        modifier = Modifier.fillMaxSize()
     )
 
     ButtonBasic(
         text = "Empezar",
-        modifier = Modifier.padding(bottom = 16.dp)
+        modifier = Modifier.padding(bottom = 16.dp),
+        onClick = {
+            onClick()
+        }
     )
     
 }
@@ -106,5 +111,5 @@ fun WelcomeHeader() {
 @PreviewDefault
 @Composable
 fun WelcomeScreenPreview() {
-    WelcomeScreen(navController = rememberNavController())
+    WelcomeScreen(onClick = {})
 }
