@@ -16,24 +16,24 @@ fun SetupNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "welcome_screen"//Screen.OnBoardingScreen.route
+        startDestination = Screen.WelcomeScreen.route
     ) {
-        composable(route = "welcome_screen") {
+        composable(route = Screen.WelcomeScreen.route) {
             WelcomeScreen(
                 onClick = {
                     navController.popBackStack()
-                    navController.navigate("onboarding_screen")
+                    navController.navigate(Screen.OnBoardingScreen.route)
                 }
             )
         }
-        composable(route = "onboarding_screen") {
+        composable(route = Screen.OnBoardingScreen.route) {
             OnBoardingScreen()
             {
                 navController.popBackStack()
-                navController.navigate("sign_in_screen")
+                navController.navigate(Screen.SignInScreen.route)
             }
         }
-        composable(route = "sign_in_screen") {
+        composable(route = Screen.SignInScreen.route) {
             SingInScreen()
         }
     }
