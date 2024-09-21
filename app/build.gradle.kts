@@ -73,4 +73,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:0.28.0")
     //Icons
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.geovannycode.jetpackcompose.ecoeats.data.networking.Api
+import com.geovannycode.jetpackcompose.ecoeats.data.networking.model.LoginRequest
 import com.geovannycode.jetpackcompose.ecoeats.navigation.SetupNavigation
 import com.geovannycode.jetpackcompose.ecoeats.ui.theme.JetPackComposeEcoeatsTheme
 
@@ -19,6 +21,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
         setContent {
+            Api.build().singIn(
+                LoginRequest(
+                    email = "geovanny0401@gmail.com",
+                    password = "123"
+                )
+            )
             SetupNavigation()
         }
     }
