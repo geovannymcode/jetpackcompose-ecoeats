@@ -15,18 +15,18 @@ import com.geovannycode.jetpackcompose.ecoeats.data.networking.Api
 import com.geovannycode.jetpackcompose.ecoeats.data.networking.model.LoginRequest
 import com.geovannycode.jetpackcompose.ecoeats.navigation.SetupNavigation
 import com.geovannycode.jetpackcompose.ecoeats.ui.theme.JetPackComposeEcoeatsTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
+
         setContent {
-            Api.build().singIn(
-                LoginRequest(
-                    email = "geovanny0401@gmail.com",
-                    password = "123"
-                )
-            )
+
             SetupNavigation()
         }
     }
