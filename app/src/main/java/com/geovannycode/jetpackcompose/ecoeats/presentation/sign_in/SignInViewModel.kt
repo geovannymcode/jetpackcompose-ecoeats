@@ -1,36 +1,50 @@
 package com.geovannycode.jetpackcompose.ecoeats.presentation.sign_in
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.geovannycode.jetpackcompose.ecoeats.core.Result
 import com.geovannycode.jetpackcompose.ecoeats.data.networking.Api
 import com.geovannycode.jetpackcompose.ecoeats.data.networking.model.LoginRequest
+import com.geovannycode.jetpackcompose.ecoeats.data.repository.AuthRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SignInViewModel: ViewModel(){
-    //Estados de la pantalla
+class SignInViewModel : ViewModel() {
+
     //Eventos
     //Estados Componentes
 
-    fun singIn(email: String, password: String){
-        GlobalScope.launch(Dispatchers.Main) {
+    //Estados de la pantalla
 
-             val response = withContext(Dispatchers.IO) {
-                 Api.build().singIn(
-                     LoginRequest(
-                         email = "geovanny0401@gmail.com",
-                         password = "123"
-                     )
-                 )
-             }
+    var state by mutableStateOf(LoginState())
 
-             if (response.isSuccessful) {
-                 val data = response.body()
-                 data?.let {
-                     println(it.data.email)
-                 }
-             }
-         }
+    val repository = AuthRepository()
+
+    fun signIn(email: String, password: String) {
+
+        state = state.copy(isLoading = true)
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    repository.signIn(email, password)
+                }
+
+                when (response) {
+                    is Result.Error -> {
+                        state = state.copy(isLoading = false, error = response.message)
+                    }
+
+                    is Result.Success -> {
+                        state = state.copy(isLoading = false, success = response.data)
+                    }
+                }
+            } catch (ex: Exception) {
+                state = state.copy(isLoading = false)
+            }
+        }
     }
 }

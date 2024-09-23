@@ -22,9 +22,8 @@ object Api {
 
    //2. Definir Metodos
     interface MethodsApi{
-
         @POST("api/securities/login")
-        fun singIn(@Body request: LoginRequest): Response<LoginResponse>
+        suspend fun signIn(@Body request: LoginRequest): Response<LoginResponse>
     }
 
     //3. Devolver una instancia
