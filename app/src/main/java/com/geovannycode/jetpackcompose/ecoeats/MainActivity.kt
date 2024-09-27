@@ -15,11 +15,13 @@ import com.geovannycode.jetpackcompose.ecoeats.data.networking.Api
 import com.geovannycode.jetpackcompose.ecoeats.data.networking.model.LoginRequest
 import com.geovannycode.jetpackcompose.ecoeats.navigation.SetupNavigation
 import com.geovannycode.jetpackcompose.ecoeats.ui.theme.JetPackComposeEcoeatsTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

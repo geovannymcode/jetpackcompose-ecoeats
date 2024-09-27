@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.geovannycode.jetpackcompose.ecoeats.R
 import com.geovannycode.jetpackcompose.ecoeats.presentation.common.ButtonBasic
@@ -55,7 +56,8 @@ import com.geovannycode.jetpackcompose.ecoeats.ui.theme.Primary
 @Composable
 fun SingInScreen(
     modifier: Modifier = Modifier,
-    viewModel: SignInViewModel = viewModel()
+    viewModel: SignInViewModel = hiltViewModel(),
+    onNavigationHome: () -> Unit
 ) {
 
     val state = viewModel.state
@@ -70,6 +72,7 @@ fun SingInScreen(
         if (state.success != null) {
             //    println(state.success?.email)
             Toast.makeText(context, state.success?.email, Toast.LENGTH_SHORT).show()
+            onNavigationHome()
         }
 
         if(state.error != null){

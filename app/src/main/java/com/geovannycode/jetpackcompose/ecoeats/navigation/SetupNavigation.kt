@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
 import androidx.navigation.compose.rememberNavController
+import com.geovannycode.jetpackcompose.ecoeats.presentation.home.HomeScreen
 import com.geovannycode.jetpackcompose.ecoeats.presentation.on_boarding.OnBoardingScreen
 import com.geovannycode.jetpackcompose.ecoeats.presentation.sign_in.SingInScreen
 import com.geovannycode.jetpackcompose.ecoeats.presentation.welcome.WelcomeScreen
@@ -34,7 +35,15 @@ fun SetupNavigation() {
             }
         }
         composable(route = Screen.SignInScreen.route) {
-            SingInScreen()
+            SingInScreen(
+                onNavigationHome = {
+                    navController.popBackStack()
+                    navController.navigate(Screen.HomeScreen.route)
+                }
+            )
+        }
+        composable(route = Screen.HomeScreen.route) {
+            HomeScreen()
         }
     }
 

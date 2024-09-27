@@ -7,12 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.geovannycode.jetpackcompose.ecoeats.core.Result
 import com.geovannycode.jetpackcompose.ecoeats.data.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class SignInViewModel : ViewModel() {
-
+@HiltViewModel
+class SignInViewModel @Inject constructor(
+    val repository: AuthRepository
+) : ViewModel() {
 
     //Estados Componentes
     var fromState by mutableStateOf(LoginFormState())
@@ -44,7 +48,8 @@ class SignInViewModel : ViewModel() {
 
 
     fun signIn() {
-        val repository = AuthRepository()
+        //val repository = AuthRepository()
+
         state = state.copy(isLoading = true)
         viewModelScope.launch {
             try {
