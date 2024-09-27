@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,10 +66,17 @@ fun SingInScreen(
         CircularProgressIndicator()
     }
 
-    if (state.success != null) {
-        //    println(state.success?.email)
-        Toast.makeText(context, state.success?.email, Toast.LENGTH_SHORT).show()
+    LaunchedEffect(key1 = state.success, key2 = state.error) {
+        if (state.success != null) {
+            //    println(state.success?.email)
+            Toast.makeText(context, state.success?.email, Toast.LENGTH_SHORT).show()
+        }
+
+        if(state.error != null){
+            Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
+        }
     }
+
 
     Column(
         modifier = Modifier
@@ -116,16 +124,6 @@ fun SignInContext(
     viewModel: SignInViewModel
 ) {
 
-    var email by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
-
-    var passwordVisible by remember {
-        mutableStateOf(false)
-    }
     TextBasic(
         text = "Login",
         style = TextStyle(
@@ -137,9 +135,10 @@ fun SignInContext(
     )
     SpacerComponent(modifier = Modifier.height(16.dp))
     OutlinedTextFieldBasic(
-        text = email,
+        text = viewModel.fromState.email,
         onValueChange = {
-            email = it
+            //email = it
+            viewModel.onEvent(LoginFormEvent.EmailChange(it))
         },
         textLabel = "Email",
         keyboardOptions = KeyboardOptions(
@@ -150,7 +149,11 @@ fun SignInContext(
             onNext = { }
         ),
         trailingIcon = {
-            IconButton(onClick = { email = "" }) {
+            IconButton(onClick = {
+                viewModel.onEvent(LoginFormEvent.EmailChange(""))
+                //email = ""
+            }
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Clear,
                     contentDescription = "Clear"
@@ -161,24 +164,24 @@ fun SignInContext(
     )
     SpacerComponent(modifier = Modifier.height(8.dp))
     OutlinedTextFieldBasic(
-        text = password,
+        text = viewModel.fromState.password,
         onValueChange = {
-            password = it
+            viewModel.onEvent(LoginFormEvent.PasswordChange(it))
         },
         textLabel = "Password",
         keyboardOptions = KeyboardOptions(
-            keyboardType = if (passwordVisible) KeyboardType.Text else KeyboardType.Password,
+            keyboardType = if (viewModel.fromState.passwordVisualTransformation) KeyboardType.Text else KeyboardType.Password,
             imeAction = ImeAction.Next
         ),
         keyboardActions = KeyboardActions(
             onNext = { }
         ),
         trailingIcon = {
-            val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-            val description = if (passwordVisible) "Hide password" else "Show password"
+            val image = if (viewModel.fromState.passwordVisualTransformation) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+            val description = if (viewModel.fromState.passwordVisualTransformation) "Hide password" else "Show password"
             IconButton(
                 onClick = {
-                    passwordVisible = !passwordVisible
+                   viewModel.onEvent(LoginFormEvent.PasswordVisualTransformationChange(!viewModel.fromState.passwordVisualTransformation))
                 }
             ) {
                 Icon(
@@ -187,7 +190,7 @@ fun SignInContext(
                 )
             }
         },
-        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(), // Controla la visibilidad del texto
+        visualTransformation = if (viewModel.fromState.passwordVisualTransformation) VisualTransformation.None else PasswordVisualTransformation(), // Controla la visibilidad del texto
         isError = false
     )
     Box(
@@ -197,7 +200,8 @@ fun SignInContext(
         ButtonBasic(
             text = "Ingresar",
             onClick = {
-                viewModel.signIn(email, password)
+                //viewModel.signIn(email, password)
+                viewModel.onEvent(LoginFormEvent.Submit)
             },
             modifier = Modifier
                 .fillMaxWidth()
