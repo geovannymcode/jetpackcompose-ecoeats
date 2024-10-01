@@ -11,4 +11,8 @@ object Util {
     fun SharedPreferences.save(data:String){
         this.edit().putString("KEY_TOKEN", data).apply()
     }
+
+    fun SharedPreferences.getToken(): String{
+        return this.getString("KEY_TOKEN","") ?: ""
+    }
 }

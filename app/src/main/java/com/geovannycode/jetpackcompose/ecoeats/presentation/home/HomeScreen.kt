@@ -2,6 +2,7 @@ package com.geovannycode.jetpackcompose.ecoeats.presentation.home
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
@@ -19,6 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
+import com.geovannycode.jetpackcompose.ecoeats.navigation.ScreenMenu
+import com.geovannycode.jetpackcompose.ecoeats.navigation.SetupNavigationMenu
 import com.geovannycode.jetpackcompose.ecoeats.presentation.common.TopBarComponent
 
 @Composable
@@ -32,7 +36,7 @@ fun HomeScreen(
             selectIcon = Icons.Filled.Home,
             unSelectedIcon = Icons.Filled.Home,
             hasNews = false,
-            route = ""
+            route = ScreenMenu.Dishes.route
         ),
         BottomNavigationItem(
             title = "Search",
@@ -40,63 +44,84 @@ fun HomeScreen(
             unSelectedIcon = Icons.Filled.Search,
             hasNews = true,
             badgeCount = 4,
-            route = ""
+            route = ScreenMenu.Search.route
         ),
         BottomNavigationItem(
             title = "Settings",
             selectIcon = Icons.Filled.Settings,
             unSelectedIcon = Icons.Filled.Settings,
             hasNews = true,
-            route = ""
+            route = ScreenMenu.Settings.route
         )
     )
+
     var selectedItemIndex by remember {
         mutableStateOf(0)
+    }
+
+    val navController = rememberNavController()
+
+    var bottomBarVisible by remember {
+        mutableStateOf(true)
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopBarComponent(imageVector = Icons.Filled.Menu,
+            TopBarComponent(imageVector = if (bottomBarVisible) Icons.Filled.Menu else Icons.AutoMirrored.Filled.ArrowBack,
                 onIconClick = {
-
+                    if (!bottomBarVisible) {
+                        bottomBarVisible = true
+                        navController.popBackStack()
+                    }
                 }
             )
         },
         bottomBar = {
-            NavigationBar {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = selectedItemIndex == index,
-                        onClick = {
-                            selectedItemIndex = index
-                        },
-                        icon = {
-                            BadgedBox(
-                                badge = {
-                                    if (item.badgeCount != null) {
-                                        Badge {
-                                            Text(text = item.badgeCount.toString())
-                                        }
-                                    } else if (item.hasNews) {
-                                        Badge()
-                                    }
+            if (bottomBarVisible) {
+                NavigationBar {
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedItemIndex == index,
+                            onClick = {
+                                selectedItemIndex = index
+                                navController.navigate(item.route) {
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                            ) {
-                                Icon(
-                                    imageVector = if (index == selectedItemIndex)
-                                        item.selectIcon
-                                    else item.unSelectedIcon,
-                                    contentDescription = item.title
-                                )
+                            },
+                            icon = {
+                                BadgedBox(
+                                    badge = {
+                                        if (item.badgeCount != null) {
+                                            Badge {
+                                                Text(text = item.badgeCount.toString())
+                                            }
+                                        } else if (item.hasNews) {
+                                            Badge()
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = if (index == selectedItemIndex)
+                                            item.selectIcon
+                                        else item.unSelectedIcon,
+                                        contentDescription = item.title
+                                    )
+                                }
                             }
-                        }
-                    )
-
+                        )
+                    }
                 }
             }
         }
     ) { paddingValues ->
-
+        SetupNavigationMenu(
+            navController = navController,
+            paddingValues = paddingValues,
+            onChangeVisibleBottomBar = {
+                bottomBarVisible = it
+            }
+        )
     }
 }

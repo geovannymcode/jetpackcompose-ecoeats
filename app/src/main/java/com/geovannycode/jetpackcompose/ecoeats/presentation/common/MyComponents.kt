@@ -3,8 +3,10 @@ package com.geovannycode.jetpackcompose.ecoeats.presentation.common
 import android.graphics.drawable.Icon
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,6 +34,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.geovannycode.jetpackcompose.ecoeats.ui.theme.Primary
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarOutline
 
 @Composable
 fun ImageBasic(
@@ -162,4 +166,23 @@ fun TopBarComponent(
              }
          }
      )
+}
+
+@Composable
+fun RatingBarComponent(
+    modifier: Modifier = Modifier,
+    maxRating:Int = 5,
+    currentRating: Int,
+    starsColor: Color = Color.Yellow
+) {
+    Row {
+        for (i in 1 .. maxRating){
+            Icon(
+                imageVector = if(i <= currentRating) Icons.Filled.Star else Icons.Filled.StarOutline,
+                contentDescription = "Stars",
+                tint = if(i <= currentRating) starsColor else Color.Unspecified,
+                modifier = modifier.padding(2.dp)
+            )
+        }
+    }
 }

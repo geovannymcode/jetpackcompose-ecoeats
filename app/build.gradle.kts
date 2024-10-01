@@ -90,4 +90,7 @@ dependencies {
 
     //Security Crypto
     implementation("androidx.security:security-crypto:1.0.0-alpha02")
+
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.0.0")
 }
