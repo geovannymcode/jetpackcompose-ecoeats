@@ -1,1 +1,3 @@
-# jetpackcompose-ecoeats
+# Jetpackcompose-ecoeats
+
+Proyecto de Android
