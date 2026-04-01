@@ -12,6 +12,8 @@ import com.geovannycode.jetpackcompose.ecoeats.presentation.dishes.DishesScreen
 import com.geovannycode.jetpackcompose.ecoeats.presentation.search.SearchScreen
 import com.geovannycode.jetpackcompose.ecoeats.presentation.settings.SettingScreen
 import com.google.gson.Gson
+import java.net.URLDecoder
+import java.net.URLEncoder
 
 @Composable
 fun SetupNavigationMenu(
@@ -29,7 +31,8 @@ fun SetupNavigationMenu(
                 paddingValues = paddingValues,
                 onClick = {
                     val dishJson = Gson().toJson(it)
-                    navController.navigate(ScreenMenu.Detail.createRoute(dishJson))
+                    val encodedJson = URLEncoder.encode(dishJson, "UTF-8")
+                    navController.navigate(ScreenMenu.Detail.createRoute(encodedJson))
                 }
             )
         }
@@ -41,7 +44,8 @@ fun SetupNavigationMenu(
         }
         composable(route = ScreenMenu.Detail.route){
             val dishJson = it.arguments?.getString("dishJson")
-            val dishDto = Gson().fromJson(dishJson, DishDto::class.java)
+            val decodedJson = URLDecoder.decode(dishJson, "UTF-8")
+            val dishDto = Gson().fromJson(decodedJson, DishDto::class.java)
             requireNotNull(dishDto)
             DetailScreen(dishDto = dishDto)
         }
