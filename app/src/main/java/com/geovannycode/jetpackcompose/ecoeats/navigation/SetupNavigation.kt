@@ -3,11 +3,14 @@ package com.geovannycode.jetpackcompose.ecoeats.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-
 import androidx.navigation.compose.rememberNavController
+import com.geovannycode.jetpackcompose.ecoeats.presentation.forgot_password.ForgotPasswordScreen
 import com.geovannycode.jetpackcompose.ecoeats.presentation.home.HomeScreen
 import com.geovannycode.jetpackcompose.ecoeats.presentation.on_boarding.OnBoardingScreen
+import com.geovannycode.jetpackcompose.ecoeats.presentation.reset_password.ResetPasswordScreen
 import com.geovannycode.jetpackcompose.ecoeats.presentation.sign_in.SingInScreen
+import com.geovannycode.jetpackcompose.ecoeats.presentation.sign_up.SignUpScreen
+import com.geovannycode.jetpackcompose.ecoeats.presentation.verify_otp.VerifyOtpScreen
 import com.geovannycode.jetpackcompose.ecoeats.presentation.welcome.WelcomeScreen
 
 @Composable
@@ -39,6 +42,55 @@ fun SetupNavigation() {
                 onNavigationHome = {
                     navController.popBackStack()
                     navController.navigate(Screen.HomeScreen.route)
+                },
+                onNavigateToSignUp = {
+                    navController.navigate(Screen.SignUpScreen.route)
+                },
+                onNavigateToForgotPassword = {
+                    navController.navigate(Screen.ForgotPasswordScreen.route)
+                }
+            )
+        }
+        composable(route = Screen.SignUpScreen.route) {
+            SignUpScreen(
+                onNavigateToLogin = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(route = Screen.ForgotPasswordScreen.route) {
+            ForgotPasswordScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onNavigateToVerifyOtp = { email ->
+                    navController.navigate(Screen.VerifyOtpScreen.createRoute(email))
+                }
+            )
+        }
+        composable(route = Screen.VerifyOtpScreen.route) {
+            val email = it.arguments?.getString("email") ?: ""
+            VerifyOtpScreen(
+                email = email,
+                onBack = {
+                    navController.popBackStack()
+                },
+                onNavigateToResetPassword = { emailArg, otp ->
+                    navController.navigate(Screen.ResetPasswordScreen.createRoute(emailArg, otp))
+                }
+            )
+        }
+        composable(route = Screen.ResetPasswordScreen.route) {
+            val email = it.arguments?.getString("email") ?: ""
+            val otp = it.arguments?.getString("otp") ?: ""
+            ResetPasswordScreen(
+                email = email,
+                otp = otp,
+                onBack = {
+                    navController.popBackStack()
+                },
+                onNavigateToLogin = {
+                    navController.popBackStack(Screen.SignInScreen.route, inclusive = false)
                 }
             )
         }
