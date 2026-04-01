@@ -13,13 +13,12 @@ import retrofit2.http.POST
 
 object Api {
 
-    // http://betolix-001-site1.etempurl.com/api/securities/login
-    //URL_BASE:http://betolix-001-site1.etempurl.com/
+    //URL_BASE: https://delightful-contentment-production-b7bb.up.railway.app/
     //METODO: /api/securities/login
 
     //1. Configurar Retrofit
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://betolix-001-site1.etempurl.com/")
+        .baseUrl("https://delightful-contentment-production-b7bb.up.railway.app/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

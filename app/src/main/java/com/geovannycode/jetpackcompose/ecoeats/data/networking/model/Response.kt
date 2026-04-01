@@ -10,7 +10,7 @@ data class LoginResponse(
 )
 
 data class UserDto(
-    @SerializedName("id") val id:Int,
+    @SerializedName("id") val id:String,
     @SerializedName("email") val email:String,
     @SerializedName("token") val token:String,
     @SerializedName("tokenFirebaseAuth") val tokenFirebaseAuth:String,
@@ -25,7 +25,7 @@ data class DishDto(
     val carbohydrates: Int,
     val description: String,
     val flagHeader: Boolean,
-    val id: Int,
+    val id: String,
     val image: String,
     val ingredients: String,
     val name: String,

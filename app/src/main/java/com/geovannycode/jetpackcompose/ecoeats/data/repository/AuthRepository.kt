@@ -24,8 +24,8 @@ class AuthRepository @Inject constructor(
             if (response.isSuccessful) {
                 val data = response.body()
                 if (data?.success == true) {
-                    sharedPreferences.save(data.data?.token ?: "")
-                    return Result.Success(data = data?.data)
+                    sharedPreferences.save(data.data.token)
+                    return Result.Success(data = data.data)
                 } else {
                     return Result.Error(message = data?.message.toString())
                 }
