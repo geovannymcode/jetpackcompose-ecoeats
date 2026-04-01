@@ -2,6 +2,7 @@ package com.geovannycode.jetpackcompose.ecoeats.presentation.sign_in
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,12 +53,15 @@ import com.geovannycode.jetpackcompose.ecoeats.presentation.common.SpacerCompone
 import com.geovannycode.jetpackcompose.ecoeats.presentation.common.TextBasic
 import com.geovannycode.jetpackcompose.ecoeats.presentation.previews.PreviewDefault
 import com.geovannycode.jetpackcompose.ecoeats.ui.theme.Primary
+import com.geovannycode.jetpackcompose.ecoeats.ui.theme.Secundary
 
 @Composable
 fun SingInScreen(
     modifier: Modifier = Modifier,
     viewModel: SignInViewModel = hiltViewModel(),
-    onNavigationHome: () -> Unit
+    onNavigationHome: () -> Unit,
+    onNavigateToSignUp: () -> Unit = {},
+    onNavigateToForgotPassword: () -> Unit = {}
 ) {
 
     val state = viewModel.state
@@ -100,14 +104,11 @@ fun SingInScreen(
                 .weight(3f)
                 .padding(start = 24.dp, end = 24.dp, top = 24.dp)
         ) {
-            SignInContext(viewModel = viewModel)
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(3f)
-        ) {
-
+            SignInContext(
+                viewModel = viewModel,
+                onNavigateToSignUp = onNavigateToSignUp,
+                onNavigateToForgotPassword = onNavigateToForgotPassword
+            )
         }
     }
 }
@@ -124,7 +125,9 @@ fun SignInHeader(modifier: Modifier = Modifier) {
 @Composable
 fun SignInContext(
     modifier: Modifier = Modifier,
-    viewModel: SignInViewModel
+    viewModel: SignInViewModel,
+    onNavigateToSignUp: () -> Unit,
+    onNavigateToForgotPassword: () -> Unit
 ) {
 
     TextBasic(
@@ -140,7 +143,6 @@ fun SignInContext(
     OutlinedTextFieldBasic(
         text = viewModel.fromState.email,
         onValueChange = {
-            //email = it
             viewModel.onEvent(LoginFormEvent.EmailChange(it))
         },
         textLabel = "Email",
@@ -154,7 +156,6 @@ fun SignInContext(
         trailingIcon = {
             IconButton(onClick = {
                 viewModel.onEvent(LoginFormEvent.EmailChange(""))
-                //email = ""
             }
             ) {
                 Icon(
@@ -193,29 +194,52 @@ fun SignInContext(
                 )
             }
         },
-        visualTransformation = if (viewModel.fromState.passwordVisualTransformation) VisualTransformation.None else PasswordVisualTransformation(), // Controla la visibilidad del texto
+        visualTransformation = if (viewModel.fromState.passwordVisualTransformation) VisualTransformation.None else PasswordVisualTransformation(),
         isError = false
     )
+    SpacerComponent(modifier = Modifier.height(8.dp))
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        TextBasic(
+            text = "¿Olvidaste tu contraseña?",
+            style = TextStyle(
+                color = Secundary,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            modifier = Modifier.clickable { onNavigateToForgotPassword() }
+        )
+    }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        ButtonBasic(
-            text = "Ingresar",
-            onClick = {
-                //viewModel.signIn(email, password)
-                viewModel.onEvent(LoginFormEvent.Submit)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ButtonBasic(
+                text = "Ingresar",
+                onClick = {
+                    viewModel.onEvent(LoginFormEvent.Submit)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            )
+            SpacerComponent(modifier = Modifier.height(16.dp))
+            TextBasic(
+                text = "¿No tienes cuenta? Regístrate",
+                style = TextStyle(
+                    color = Secundary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = Modifier.clickable { onNavigateToSignUp() }
+            )
+            SpacerComponent(modifier = Modifier.height(16.dp))
+        }
     }
 
 }
-
-/*@PreviewDefault
-@Composable
-fun SingInScreenPreview() {
-    SingInScreen()
-}*/

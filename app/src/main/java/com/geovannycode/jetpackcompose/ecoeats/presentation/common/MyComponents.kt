@@ -119,6 +119,7 @@ fun OutlinedTextFieldBasic(
                 text = textLabel
             )
         },
+        singleLine = true,
         shape = RoundedCornerShape(roundedDP),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Primary,
