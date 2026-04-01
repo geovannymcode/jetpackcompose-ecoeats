@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
@@ -64,80 +65,85 @@ fun DishesScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.getDishes()
     }
-    Column(
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        TextBasic(
-            text = "¿Que hay de nuevo?",
-            style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, start = 8.dp, bottom = 8.dp)
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            viewModel.state.success?.let { dishes ->
-                val dishesFilter = dishes.filter {
-                    it.flagHeader
-                }
-                HorizontalPager(
-                    count = dishesFilter.count(),
-                    state = pagerState
-                ) { index ->
-                    PagerDishComponent(
-                        dishDto = dishesFilter[index],
-                        context = context,
-                        onClick = {
-                            onClick(it)
+        item(span = { GridItemSpan(2) }) {
+            TextBasic(
+                text = "¿Que hay de nuevo?",
+                style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, start = 8.dp, bottom = 8.dp)
+            )
+        }
+        item(span = { GridItemSpan(2) }) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                viewModel.state.success?.let { dishes ->
+                    val dishesFilter = dishes.filter {
+                        it.flagHeader
+                    }
+                    if (dishesFilter.isNotEmpty()) {
+                        HorizontalPager(
+                            count = dishesFilter.count(),
+                            state = pagerState
+                        ) { index ->
+                            PagerDishComponent(
+                                dishDto = dishesFilter[index],
+                                context = context,
+                                onClick = {
+                                    onClick(it)
+                                }
+                            )
                         }
-                    )
-                }
-                Row(
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    repeat(dishesFilter.size) { iteration ->
-                        val color =
-                            if (pagerState.currentPage == iteration) Color.White else Color.Gray
-                        Box(
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .clip(CircleShape)
-                                .background(color)
-                                .size(8.dp)
-                        )
+                        Row(
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            repeat(dishesFilter.size) { iteration ->
+                                val color =
+                                    if (pagerState.currentPage == iteration) Color.White else Color.Gray
+                                Box(
+                                    modifier = Modifier
+                                        .padding(2.dp)
+                                        .clip(CircleShape)
+                                        .background(color)
+                                        .size(8.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
-        TextBasic(
-            text = "Carta del Día",
-            style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, start = 8.dp, bottom = 8.dp)
-        )
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            viewModel.state.success?.let {
-                items(it) {
-                    DishItem(
-                        dishDto = it,
-                        context = context,
-                        onClick = {
-                            onClick(it)
-                        }
-                    )
-                }
+        item(span = { GridItemSpan(2) }) {
+            TextBasic(
+                text = "Carta del Día",
+                style = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Bold),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, start = 8.dp, bottom = 8.dp)
+            )
+        }
+        viewModel.state.success?.let {
+            items(it) {
+                DishItem(
+                    dishDto = it,
+                    context = context,
+                    onClick = {
+                        onClick(it)
+                    }
+                )
             }
         }
     }
